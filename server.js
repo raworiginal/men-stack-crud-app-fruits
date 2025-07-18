@@ -4,14 +4,15 @@ const dotenv = require("dotenv");
 dotenv.config();
 const mongoose = require("mongoose");
 const Fruit = require("./models/fruit.js");
-/* ====================== Middleware ======================*/
+
 /* ====================== Constants ======================*/
 const app = express();
+/* ====================== Middleware ======================*/
+app.use(express.urlencoded({ extended: false }));
+
 /* ====================== Variables ======================*/
 
 /* ====================== Functions ======================*/
-
-/* ====================== Query Functions ======================*/
 
 /* ====================== DB Connection ======================*/
 mongoose.connect(process.env.MONGODB_URI);
@@ -26,6 +27,17 @@ app.get("/", async (req, res) => {
 
 app.get("/fruits/new", (req, res) => {
   res.render("fruits/new.ejs");
+});
+
+app.post("/fruits", async (req, res) => {
+  if (req.body.isReadyToEat === "on") {
+    req.body.isReadyToEat = true;
+  } else {
+    req.body.isReadyToEat = false;
+  }
+  await Fruit.create(req.body);
+  console.log(req.body);
+  res.redirect("/fruits/new");
 });
 /* ====================== Server ======================*/
 
