@@ -1,9 +1,9 @@
-/* ====================== Modules ======================*/
+/* ====================== Dependencies ======================*/
 const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
 const mongoose = require("mongoose");
-
+const Fruit = require("./models/fruit.js");
 /* ====================== Constants ======================*/
 const app = express();
 /* ====================== Variables ======================*/
