@@ -13,6 +13,10 @@ const app = express();
 app.get("/", async (req, res) => {
   res.render("index.ejs");
 });
+
+app.get("/fruits/new", (req, res) => {
+  res.send("This route sends the user a form page!");
+});
 /* ====================== Listener ======================*/
 mongoose.connect(process.env.MONGODB_URI);
 //log conneciton status in terminal at start
