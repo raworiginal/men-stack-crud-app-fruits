@@ -6,14 +6,15 @@ const mongoose = require("mongoose");
 const Fruit = require("./models/fruit.js");
 const methodOverride = require("method-override");
 const morgan = require("morgan");
+const path = require("path");
 
 /* ====================== Constants ======================*/
 const app = express();
 /* ====================== Middleware ======================*/
 app.use(express.urlencoded({ extended: false }));
 app.use(methodOverride("_method"));
-app.use(morgan("dev"));
-
+// app.use(morgan("dev"));
+app.use(express.static(path.join(__dirname, "public")));
 /* ====================== DB Connection ======================*/
 mongoose.connect(process.env.MONGODB_URI);
 //log conneciton status in terminal at start
@@ -43,6 +44,7 @@ app.post("/fruits", async (req, res) => {
   await Fruit.create(req.body);
   res.redirect("/fruits");
 });
+
 app.get("/fruits/:fruitId", async (req, res) => {
   const foundFruit = await Fruit.findById(req.params.fruitId);
   res.render("fruits/show.ejs", { fruit: foundFruit });
@@ -60,13 +62,13 @@ app.get("/fruits/:fruitId/edit", async (req, res) => {
   });
 });
 
-app.put("/fruits/:fruitId", async (req, res)=>{
-  if (req.body.isReadyToEat === 'on') req.body.isReadyToEat = true;
-  else req.body.isReadyToEat = false
+app.put("/fruits/:fruitId", async (req, res) => {
+  if (req.body.isReadyToEat === "on") req.body.isReadyToEat = true;
+  else req.body.isReadyToEat = false;
 
   await Fruit.findByIdAndUpdate(req.params.fruitId, req.body);
-  res.redirect(`/fruits/${req.params.fruitId}`)
-})
+  res.redirect(`/fruits/${req.params.fruitId}`);
+});
 /* ====================== Server ======================*/
 
 app.listen(3000, () => {
