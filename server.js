@@ -4,11 +4,15 @@ const dotenv = require("dotenv");
 dotenv.config();
 const mongoose = require("mongoose");
 const Fruit = require("./models/fruit.js");
+const methodOverride = require("method-override");
+const morgan = require("morgan");
 
 /* ====================== Constants ======================*/
 const app = express();
 /* ====================== Middleware ======================*/
 app.use(express.urlencoded({ extended: false }));
+app.use(methodOverride("_method"));
+app.use(morgan("dev"));
 
 /* ====================== DB Connection ======================*/
 mongoose.connect(process.env.MONGODB_URI);
@@ -42,6 +46,17 @@ app.post("/fruits", async (req, res) => {
 app.get("/fruits/:fruitId", async (req, res) => {
   const foundFruit = await Fruit.findById(req.params.fruitId);
   res.render("fruits/show.ejs", { fruit: foundFruit });
+});
+
+app.delete("/fruits/:fruitId", async (req, res) => {
+  await Fruit.findByIdAndDelete(req.params.fruitId);
+  res.redirect("/fruits");
+});
+
+app.get("/fruits/:fruitId/edit", async (req, res) => {
+  const foundFruit = await Fruit.findById(req.params.fruitId);
+  console.log(foundFruit);
+  res.send(`This is the edit route for ${foundFruit.name}`);
 });
 /* ====================== Server ======================*/
 
