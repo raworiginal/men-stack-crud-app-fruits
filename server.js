@@ -27,8 +27,7 @@ app.get("/fruits/new", async (req, res) => {
 
 app.get("/fruits", async (req, res) => {
   const allFruits = await Fruit.find({});
-  console.log(allFruits);
-  res.send("Welcome to the index page!");
+  res.render("fruits/index.ejs", { fruits: allFruits });
 });
 
 app.post("/fruits", async (req, res) => {
@@ -38,7 +37,7 @@ app.post("/fruits", async (req, res) => {
     req.body.isReadyToEat = false;
   }
   await Fruit.create(req.body);
-  res.redirect("/fruits/new");
+  res.redirect("/fruits");
 });
 /* ====================== Server ======================*/
 
