@@ -10,10 +10,6 @@ const app = express();
 /* ====================== Middleware ======================*/
 app.use(express.urlencoded({ extended: false }));
 
-/* ====================== Variables ======================*/
-
-/* ====================== Functions ======================*/
-
 /* ====================== DB Connection ======================*/
 mongoose.connect(process.env.MONGODB_URI);
 //log conneciton status in terminal at start
@@ -25,8 +21,14 @@ app.get("/", async (req, res) => {
   res.render("index.ejs");
 });
 
-app.get("/fruits/new", (req, res) => {
+app.get("/fruits/new", async (req, res) => {
   res.render("fruits/new.ejs");
+});
+
+app.get("/fruits", async (req, res) => {
+  const allFruits = await Fruit.find({});
+  console.log(allFruits);
+  res.send("Welcome to the index page!");
 });
 
 app.post("/fruits", async (req, res) => {
@@ -36,7 +38,6 @@ app.post("/fruits", async (req, res) => {
     req.body.isReadyToEat = false;
   }
   await Fruit.create(req.body);
-  console.log(req.body);
   res.redirect("/fruits/new");
 });
 /* ====================== Server ======================*/
